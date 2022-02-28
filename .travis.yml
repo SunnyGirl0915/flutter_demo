@@ -1,87 +1,21 @@
-#matrix:
-#  include:
-#    # 声明 Android 运行环境
-#    - os: linux
-#      language: android
-#      dist: trusty
-#      licenses:
-#        - 'android-sdk-preview-license-.+'
-#        - 'android-sdk-license-.+'
-#        - 'google-gdk-license-.+'
-#      # 声明需要安装的 Android 组件
-#      android:
-#        components:
-#          - tools
-#          - platform-tools
-#          - build-tools-28.0.3
-#          - android-28
-#          - sys-img-armeabi-v7a-google_apis-28
-#          - extra-android-m2repository
-#          - extra-google-m2repository
-#          - extra-google-android-support
-#      jdk: oraclejdk8
-#      sudo: false
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#          packages:
-#            - libstdc++6
-#            - fonts-droid
-#      # 确保 sdkmanager 是最新的
-#      before_script:
-#        - yes | sdkmanager --update
-#      script:
-#        - yes | flutter doctor --android-licenses
-#        - flutter doctor && flutter -v build apk
-#      deploy:
-#        provider: releases
-#        api_key: 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
-#        file:
-#          - build/app/outputs/apk/release/app-release.apk
-#        skip_cleanup: true
-#        on:
-#          tags: true
-#
-#    # 声明 iOS 的运行环境
-#    - os: osx
-#      language: objective-c
-#      osx_image: xcode13.2
-#      script:
-#        - flutter doctor && flutter -v build ios --no-codesign
-#      # 对发布前的构建产物进行预处理，打包成 ipa
-#      before_deploy:
-#        - mkdir app && mkdir app/Payload
-#        - cp -r build/ios/iphoneos/Runner.app app/Payload
-#        - pushd app && zip -r -m app.ipa Payload  && popd
-#      # 将 ipa 上传至 github release
-#      deploy:
-#        provider: releases
-#        api_key: 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
-#        file:
-#          - app/app.ipa
-#        skip_cleanup: true
-#        on:
-#          tags: true
-#install:
-#  - git clone https://github.com/flutter/flutter.git
-#  - export PATH="$PATH:`pwd`/flutter/bin"
-
 matrix:
   include:
+    # 声明 Android 运行环境
     - os: linux
       language: android
+      dist: trusty
       licenses:
         - 'android-sdk-preview-license-.+'
         - 'android-sdk-license-.+'
         - 'google-gdk-license-.+'
+      # 声明需要安装的 Android 组件
       android:
         components:
           - tools
           - platform-tools
-          - build-tools-25.0.3
-          - android-25
-          - sys-img-armeabi-v7a-google_apis-25
+          - build-tools-28.0.3
+          - android-28
+          - sys-img-armeabi-v7a-google_apis-28
           - extra-android-m2repository
           - extra-google-m2repository
           - extra-google-android-support
@@ -89,44 +23,110 @@ matrix:
       sudo: false
       addons:
         apt:
-          # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
           sources:
-            - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
+            - ubuntu-toolchain-r-test
           packages:
             - libstdc++6
             - fonts-droid
+      # 确保 sdkmanager 是最新的
       before_script:
-        - wget https://services.gradle.org/distributions/gradle-3.5-bin.zip
-        - unzip -qq gradle-3.5-bin.zip
-        - export GRADLE_HOME=$PWD/gradle-3.5
-        - export PATH=$GRADLE_HOME/bin:$PATH
-        - git clone https://github.com/flutter/flutter.git -b stable --depth 1
-        - yes | sdkmanager "platforms;android-29"
-        - yes | sdkmanager "build-tools;28.0.3"
+        - yes | sdkmanager --update
       script:
-        - ./flutter/bin/flutter -v build apk
-
-    - os: osx
-      language: objective-c
-      osx_image: xcode13.2
-      before_script:
-        - brew update
-        - brew install --HEAD libimobiledevice
-        - brew install ideviceinstaller
-        - brew install ios-deploy
-        - git clone https://github.com/flutter/flutter.git -b stable --depth 1
-      script:
-        - ./flutter/bin/flutter -v build ios --no-codesign
+        - yes | flutter doctor --android-licenses
+        - flutter doctor && flutter -v build apk
       deploy:
         provider: releases
+        api_key: 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
+        file:
+          - build/app/outputs/apk/release/app-release.apk
         skip_cleanup: true
-        # 用你的api_key替代
-        api_key:
-          secure: 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
-        file: $APK_OUTPUT
         on:
           tags: true
 
-cache:
-  directories:
-    - $HOME/.pub-cache
+    # 声明 iOS 的运行环境
+    - os: osx
+      language: objective-c
+      osx_image: xcode13.2
+      script:
+        - flutter doctor && flutter -v build ios --no-codesign
+      # 对发布前的构建产物进行预处理，打包成 ipa
+      before_deploy:
+        - mkdir app && mkdir app/Payload
+        - cp -r build/ios/iphoneos/Runner.app app/Payload
+        - pushd app && zip -r -m app.ipa Payload  && popd
+      # 将 ipa 上传至 github release
+      deploy:
+        provider: releases
+        api_key: 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
+        file:
+          - app/app.ipa
+        skip_cleanup: true
+        on:
+          tags: true
+install:
+  - git clone https://github.com/flutter/flutter.git
+  - export PATH="$PATH:`pwd`/flutter/bin"
+
+#matrix:
+#  include:
+#    - os: linux
+#      language: android
+#      licenses:
+#        - 'android-sdk-preview-license-.+'
+#        - 'android-sdk-license-.+'
+#        - 'google-gdk-license-.+'
+#      android:
+#        components:
+#          - tools
+#          - platform-tools
+#          - build-tools-25.0.3
+#          - android-25
+#          - sys-img-armeabi-v7a-google_apis-25
+#          - extra-android-m2repository
+#          - extra-google-m2repository
+#          - extra-google-android-support
+#      jdk: oraclejdk8
+#      sudo: false
+#      addons:
+#        apt:
+#          # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
+#          sources:
+#            - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
+#          packages:
+#            - libstdc++6
+#            - fonts-droid
+#      before_script:
+#        - wget https://services.gradle.org/distributions/gradle-3.5-bin.zip
+#        - unzip -qq gradle-3.5-bin.zip
+#        - export GRADLE_HOME=$PWD/gradle-3.5
+#        - export PATH=$GRADLE_HOME/bin:$PATH
+#        - git clone https://github.com/flutter/flutter.git -b stable --depth 1
+#        - yes | sdkmanager "platforms;android-29"
+#        - yes | sdkmanager "build-tools;28.0.3"
+#      script:
+#        - ./flutter/bin/flutter -v build apk
+#
+#    - os: osx
+#      language: objective-c
+#      osx_image: xcode13.2
+#      before_script:
+#        - brew update
+#        - brew install --HEAD libimobiledevice
+#        - brew install ideviceinstaller
+#        - brew install ios-deploy
+#        - git clone https://github.com/flutter/flutter.git -b stable --depth 1
+#      script:
+#        - ./flutter/bin/flutter -v build ios --no-codesign
+#      deploy:
+#        provider: releases
+#        skip_cleanup: true
+#        # 用你的api_key替代
+#        api_key:
+#          secure: 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
+#        file: $APK_OUTPUT
+#        on:
+#          tags: true
+#
+#cache:
+#  directories:
+#    - $HOME/.pub-cache
