@@ -181,6 +181,7 @@ jobs:
           - build/app/outputs/apk/app-release.apk
           - build/app.flx
         on:
+          repo: SunnyGirl0915/flutter_demo
           tags: true
     - os: osx
       language: objective-c
@@ -201,6 +202,7 @@ jobs:
           secure: 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
         file: $APK_OUTPUT
         on:
+          repo: SunnyGirl0915/flutter_demo
           tags: true
 
 cache:
