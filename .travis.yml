@@ -188,8 +188,8 @@ jobs:
           - build/app/outputs/apk/app-release.apk
           - build/app.flx
         edge: true
-#        on:
-#          repo: SunnyGirl0915/flutter_demo
+        on:
+          repo: SunnyGirl0915/flutter_demo
 #          tags: true
     - os: osx
       language: objective-c
@@ -217,8 +217,8 @@ jobs:
         file:
           - app/app.ipa
         edge: true
-#        on:
-#          repo: SunnyGirl0915/flutter_demo
+        on:
+          repo: SunnyGirl0915/flutter_demo
 #          tags: true
 
 cache:
