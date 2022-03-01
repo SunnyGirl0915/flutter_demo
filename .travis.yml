@@ -173,6 +173,12 @@ jobs:
         - yes | sdkmanager "build-tools;28.0.3"
       script:
         - ./flutter/bin/flutter -v build apk
+      before_deploy:
+        # Set up git user name and tag this commit
+        - git config --local user.name "SunnyGirl0915"
+        - git config --local user.email "454718803@qq.com"
+        - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+        - git tag $TRAVIS_TAG
       deploy:
         provider: releases
         cleanup: false
@@ -180,6 +186,7 @@ jobs:
         file:
           - build/app/outputs/apk/app-release.apk
           - build/app.flx
+        edge: true
         on:
           repo: SunnyGirl0915/flutter_demo
           tags: true
@@ -194,6 +201,12 @@ jobs:
         - git clone https://github.com/flutter/flutter.git -b stable --depth 1
       script:
         - ./flutter/bin/flutter -v build ios --no-codesign
+      before_deploy:
+        # Set up git user name and tag this commit
+        - git config --local user.name "SunnyGirl0915"
+        - git config --local user.email "454718803@qq.com"
+        - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+        - git tag $TRAVIS_TAG
       deploy:
         provider: releases
         cleanup: false
@@ -201,6 +214,7 @@ jobs:
         api_key:
           secure: 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
         file: $APK_OUTPUT
+        edge: true
         on:
           repo: SunnyGirl0915/flutter_demo
           tags: true
