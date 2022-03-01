@@ -5,7 +5,7 @@ matrix:
       language: android
       dist: trusty
       licenses:
-        - 'android-sdk-preview-license-.+'
+        - 'android-sdk-preview-license-52d11cd2'
         - 'android-sdk-license-.+'
         - 'google-gdk-license-.+'
       # 声明需要安装的 Android 组件
@@ -37,7 +37,7 @@ matrix:
       deploy:
         provider: releases
         skip_cleanup: true
-        api_key: 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
+        api_key: ${GITHUB_TOKEN}
         file:
           - build/app/outputs/apk/app-release.apk
           - build/app.flx
@@ -60,7 +60,7 @@ matrix:
       # 将 ipa 上传至 github release
       deploy:
         provider: releases
-        api_key: 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
+        api_key: ${GITHUB_TOKEN}
         file:
           - app/app.ipa
         skip_cleanup: true
