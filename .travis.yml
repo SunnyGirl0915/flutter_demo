@@ -212,7 +212,7 @@ jobs:
         cleanup: false
         # 用你的api_key替代
         api_key:
-          secure: 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
+          secure: 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
         file:
           - app/app.ipa
         edge: true
