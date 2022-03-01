@@ -136,35 +136,8 @@
 #    - $HOME/.pub-cache
 
 jobs:
-  # This causes the build to complete immediately upon first failure or once
-  # required jobs are green.
-  fast_finish: true
-
-  # Building APK/IPA takes a long time; do not wait for them to finish.
-  allow_failures:
-    - env: JOB=APK
-    - env: JOB=IPA
-
   include:
-    # Runs unit tests without emulators.
-    - env: JOB=PR
-      os: linux
-      language: generic
-      addons:
-        apt:
-          # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
-          sources:
-            - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
-          packages:
-            - libstdc++6
-            - fonts-droid
-      before_script:
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
-      script:
-        - ./flutter/bin/flutter test
-
-    # Builds an APK.
-    - env: JOB=APK
+    -
       os: linux
       language: android
       licenses:
@@ -191,28 +164,44 @@ jobs:
             - libstdc++6
             - fonts-droid
       before_script:
-        - wget http://services.gradle.org/distributions/gradle-3.5-bin.zip
+        - wget https://services.gradle.org/distributions/gradle-3.5-bin.zip
         - unzip -qq gradle-3.5-bin.zip
         - export GRADLE_HOME=$PWD/gradle-3.5
         - export PATH=$GRADLE_HOME/bin:$PATH
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
+        - git clone https://github.com/flutter/flutter.git -b stable --depth 1
+        - yes | sdkmanager "platforms;android-29"
+        - yes | sdkmanager "build-tools;28.0.3"
       script:
         - ./flutter/bin/flutter -v build apk
-
-    # Builds an IPA.
-    - env: JOB=IPA
-      os: osx
-      language: generic
-      osx_image: xcode8.3
+      deploy:
+        provider: releases
+        cleanup: false
+        token: ${GITHUB_TOKEN}
+        file:
+          - build/app/outputs/apk/app-release.apk
+          - build/app.flx
+        on:
+          tags: true
+    - os: osx
+      language: objective-c
+      osx_image: xcode13.2
       before_script:
-        - pip install six
         - brew update
 #        - brew install --HEAD libimobiledevice
         - brew install ideviceinstaller
         - brew install ios-deploy
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
+        - git clone https://github.com/flutter/flutter.git -b stable --depth 1
       script:
         - ./flutter/bin/flutter -v build ios --no-codesign
+      deploy:
+        provider: releases
+        cleanup: false
+        # 用你的api_key替代
+        api_key:
+          secure: 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
+        file: $APK_OUTPUT
+        on:
+          tags: true
 
 cache:
   directories:
