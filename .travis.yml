@@ -1,7 +1,8 @@
-matrix:
+jobs:
   include:
     # 声明 Android 运行环境
-    - os: linux
+    - stage: test
+      os: linux
       language: android
       dist: trusty
       licenses:
@@ -20,7 +21,6 @@ matrix:
           - extra-google-m2repository
           - extra-google-android-support
       jdk: oraclejdk8
-      sudo: false
 #      addons:
 #        apt:
 #          sources:
@@ -37,7 +37,7 @@ matrix:
       deploy:
         provider: releases
         skip_cleanup: true
-        api_key: ${GITHUB_TOKEN}
+        token: ${GITHUB_TOKEN}
         file:
           - build/app/outputs/apk/app-release.apk
           - build/app.flx
@@ -47,7 +47,8 @@ matrix:
 
 
     # 声明 iOS 的运行环境
-    - os: osx
+    - stage: ios
+      os: osx
       language: objective-c
       osx_image: xcode13.2
       script:
@@ -60,10 +61,10 @@ matrix:
       # 将 ipa 上传至 github release
       deploy:
         provider: releases
-        api_key: ${GITHUB_TOKEN}
+        token: ${GITHUB_TOKEN}
         file:
           - app/app.ipa
-        skip_cleanup: true
+        cleanup: false
         on:
           tags: true
 install:
