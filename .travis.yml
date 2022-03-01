@@ -21,13 +21,13 @@ matrix:
           - extra-google-android-support
       jdk: oraclejdk8
       sudo: false
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - libstdc++6
-            - fonts-droid
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - libstdc++6
+#            - fonts-droid
       # 确保 sdkmanager 是最新的
       before_script:
         - yes | sdkmanager --update
