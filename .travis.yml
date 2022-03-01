@@ -34,14 +34,25 @@ matrix:
       script:
         - yes | flutter doctor --android-licenses
         - flutter doctor && flutter -v build apk
-      deploy:
-        provider: releases
-        api_key: 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
-        file:
-          - build/app/outputs/apk/release/app-release.apk
-        skip_cleanup: true
-        on:
-          tags: true
+#      deploy:
+#        provider: releases
+#        api_key: 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
+#        file:
+#          - build/app/outputs/apk/release/app-release.apk
+#        skip_cleanup: true
+#        on:
+#          tags: true
+        deploy:
+          provider: releases
+          skip_cleanup: true
+          api_key: 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
+          file:
+            - build/app/outputs/apk/app-release.apk
+            - build/app.flx
+          on:
+            tags: true
+            repo: 454718803@qq.com/flutter_demo
+
 
     # 声明 iOS 的运行环境
     - os: osx
