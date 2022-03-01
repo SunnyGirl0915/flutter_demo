@@ -187,7 +187,7 @@ jobs:
         file:
           - build/app/outputs/apk/app-release.apk
           - build/app.flx
-        edge: true
+#        edge: true
         on:
           repo: SunnyGirl0915/flutter_demo
 #          tags: true
@@ -216,7 +216,7 @@ jobs:
           secure: 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
         file:
           - app/app.ipa
-        edge: true
+#        edge: true
         on:
           repo: SunnyGirl0915/flutter_demo
 #          tags: true
